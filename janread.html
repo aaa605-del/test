@@ -74,7 +74,7 @@
         document.addEventListener('keydown', function(event) {
             const currentTime = Date.now();
 
-            if (currentTime - lastKeyTime > 100) {
+            if (currentTime - lastKeyTime > 200) {
                 buffer = '';
             }
 
@@ -85,14 +85,14 @@
                 processJANCode(buffer);
                 buffer = '';
                 event.preventDefault();
-            } else if (buffer.length === 13) {
+            } else if (buffer.length === 12) {
+		buffer += event.key;
                 alert('13桁入力されました。');
 		alert(buffer);
                 processJANCode(buffer);
                 buffer = '';
                 event.preventDefault();
             } else if (event.key.length === 1) {
-		alert(buffer);
                 buffer += event.key;
             }
         });
