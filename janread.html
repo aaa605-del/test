@@ -79,19 +79,20 @@
             }
 
             lastKeyTime = currentTime;
-
-	    alert(buffer);
             if (event.key === 'Enter') {
 		alert('Enterボタンが押されました。');
+		alert(buffer);
                 processJANCode(buffer);
                 buffer = '';
                 event.preventDefault();
             } else if (buffer.length === 13) {
                 alert('13桁入力されました。');
+		alert(buffer);
                 processJANCode(buffer);
                 buffer = '';
                 event.preventDefault();
             } else if (event.key.length === 1) {
+		alert(buffer);
                 buffer += event.key;
             }
         });
