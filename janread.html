@@ -80,7 +80,7 @@
 
             lastKeyTime = currentTime;
 
-            if (event.key === 'Enter' || buffer.length === 13 || buffer.length === 8) {
+            if (event.key === 'Enter' || buffer.length === 13) {
                 processJANCode(buffer);
                 buffer = '';
                 event.preventDefault();
