@@ -80,7 +80,13 @@
 
             lastKeyTime = currentTime;
 
-            if (event.key === 'Enter' || buffer.length === 13) {
+            if (event.key === 'Enter') {
+		isplayResult('Enterボタンが押されました。');
+                processJANCode(buffer);
+                buffer = '';
+                event.preventDefault();
+            } else if (buffer.length === 13) {
+                isplayResult('13桁入力されました。');
                 processJANCode(buffer);
                 buffer = '';
                 event.preventDefault();
