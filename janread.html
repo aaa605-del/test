@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JANコードスキャナー</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        #result, .form-container {
+            background: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"], input[type="email"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JANコードスキャナー</h1>
+        <p>ページ上のどこでもJANコードをスキャンしてください。</p>
+        <div id="result"></div>
+
+        <div class="form-container">
+            <h2>お問い合わせフォーム</h2>
+            <form id="contactForm">
+                <label for="name">お名前：</label>
+                <input type="text" id="name" name="name" >
+
+                <label for="email">メールアドレス：</label>
+                <input type="email" id="email" name="email" >
+
+                <label for="message">メッセージ：</label>
+                <textarea id="message" name="message" rows="4" ></textarea>
+
+                <input type="submit" value="送信">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let buffer = '';
+        let lastKeyTime = Date.now();
+
+        document.addEventListener('keydown', function(event) {
+            const currentTime = Date.now();
+
+            if (currentTime - lastKeyTime > 100) {
+                buffer = '';
+            }
+
+            lastKeyTime = currentTime;
+
+            if (event.key === 'Enter' || buffer.length === 13 || buffer.length === 8) {
+                processJANCode(buffer);
+                buffer = '';
+                event.preventDefault();
+            } else if (event.key.length === 1) {
+                buffer += event.key;
+            }
+        });
+
+        function processJANCode(code) {
+            const cleanedCode = code.replace(/[\r\n\t]+$/, '');
+            
+            if (/^\d{13}$|^\d{8}$/.test(cleanedCode)) {
+                displayJANCode(cleanedCode);
+            } else {
+                displayResult('無効なJANコードです。');
+            }
+        }
+
+        function displayJANCode(janCode) {
+            displayResult(`JANコード ${janCode} が正常に読み取られました。`);
+        }
+
+        function displayResult(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+        }
+
+        // お問い合わせフォームの送信をハンドル
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+	    displayResult('送信ボタンが押されました。');
+            alert('フォームが送信されました。（このメッセージはデモ用です）');
+        });
+    </script>
+</body>
+</html>
