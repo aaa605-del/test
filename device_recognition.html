@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デバイス判別</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    #result {
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>デバイス判別</h1>
+  <div id="result">デバイスを確認中...</div>
+</div>
+
+<script>
+  function getDeviceType() {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes('iphone') || ua.includes('ipad') || ua.includes('ipod')) {
+      return 'iOS';
+    } else if (ua.includes('android')) {
+      return 'Android';
+    } else {
+      return 'その他';
+    }
+  }
+
+  document.getElementById('result').textContent = `デバイス: ${getDeviceType()}`;
+</script>
+
+</body>
+</html>

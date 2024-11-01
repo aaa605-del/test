@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>位置情報取得</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    #location {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .coordinates {
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #333;
+    }
+    .error {
+      color: red;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div id="location">
+    <h2>位置情報を取得</h2>
+    <button onclick="getLocation()">位置情報を取得する</button>
+    <div class="coordinates" id="coordinates"></div>
+    <div class="error" id="error"></div>
+  </div>
+
+  <script>
+    function getLocation() {
+      const coordinatesDisplay = document.getElementById("coordinates");
+      const errorDisplay = document.getElementById("error");
+
+      // 表示をクリア
+      coordinatesDisplay.textContent = "";
+      errorDisplay.textContent = "";
+
+      // 位置情報の取得
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // 位置情報が取得できた場合
+            coordinatesDisplay.textContent = `緯度: ${position.coords.latitude}, 経度: ${position.coords.longitude}`;
+          },
+          (error) => {
+            // エラーが発生した場合
+            switch(error.code) {
+              case error.PERMISSION_DENIED:
+                errorDisplay.textContent = "ユーザーが位置情報の取得を拒否しました。";
+                break;
+              case error.POSITION_UNAVAILABLE:
+                errorDisplay.textContent = "位置情報が利用できません。";
+                break;
+              case error.TIMEOUT:
+                errorDisplay.textContent = "位置情報の取得がタイムアウトしました。";
+                break;
+              default:
+                errorDisplay.textContent = "その他のエラーが発生しました。";
+            }
+          }
+        );
+      } else {
+        errorDisplay.textContent = "このブラウザは位置情報APIをサポートしていません。";
+      }
+    }
+  </script>
+</body>
+</html>
