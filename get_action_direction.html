@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action and Direction</title>
+</head>
+<body>
+    <h1>Choose Action and Direction</h1>
+    <label for="action">Action:</label>
+    <select id="action" onchange="handleActionChange()">
+        <option value="">--Select an action--</option>
+        <option value="move">Move</option>
+        <option value="attack">Attack</option>
+        <option value="stop">Stop</option>
+    </select>
+
+    <div id="direction-container" style="display: none; margin-top: 10px;">
+        <label for="direction">Direction:</label>
+        <select id="direction">
+            <option value="">--Select a direction--</option>
+            <option value="up">Up</option>
+            <option value="down">Down</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+        </select>
+    </div>
+
+    <button onclick="submitChoice()">Submit</button>
+
+    <h2>Result</h2>
+    <p id="result">Your choice will appear here.</p>
+
+    <script>
+        function handleActionChange() {
+            const action = document.getElementById("action").value;
+            const directionContainer = document.getElementById("direction-container");
+
+            // Show direction dropdown only if "move" is selected
+            if (action === "move") {
+                directionContainer.style.display = "block";
+            } else {
+                directionContainer.style.display = "none";
+            }
+        }
+
+        function submitChoice() {
+            const action = document.getElementById("action").value;
+            const direction = document.getElementById("direction").value;
+            const result = document.getElementById("result");
+
+            if (action === "move" && direction) {
+                result.textContent = `Action: ${action}, Direction: ${direction}`;
+            } else if (action) {
+                result.textContent = `Action: ${action}`;
+            } else {
+                result.textContent = "Please select an action.";
+            }
+        }
+    </script>
+</body>
+</html>
