@@ -3,60 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Action and Direction</title>
+    <title>Device Orientation</title>
 </head>
 <body>
-    <h1>Choose Action and Direction</h1>
-    <label for="action">Action:</label>
-    <select id="action" onchange="handleActionChange()">
-        <option value="">--Select an action--</option>
-        <option value="move">Move</option>
-        <option value="attack">Attack</option>
-        <option value="stop">Stop</option>
-    </select>
-
-    <div id="direction-container" style="display: none; margin-top: 10px;">
-        <label for="direction">Direction:</label>
-        <select id="direction">
-            <option value="">--Select a direction--</option>
-            <option value="up">Up</option>
-            <option value="down">Down</option>
-            <option value="left">Left</option>
-            <option value="right">Right</option>
-        </select>
-    </div>
-
-    <button onclick="submitChoice()">Submit</button>
-
-    <h2>Result</h2>
-    <p id="result">Your choice will appear here.</p>
+    <h1>Check Device Orientation</h1>
+    <button id="request-permission">Request Permission</button>
+    <p id="status">Status: Waiting for user action...</p>
+    <p id="orientation">Orientation: N/A</p>
 
     <script>
-        function handleActionChange() {
-            const action = document.getElementById("action").value;
-            const directionContainer = document.getElementById("direction-container");
+        const statusElement = document.getElementById("status");
+        const orientationElement = document.getElementById("orientation");
 
-            // Show direction dropdown only if "move" is selected
-            if (action === "move") {
-                directionContainer.style.display = "block";
+        // Function to handle permission request for iOS
+        async function requestPermission() {
+            if (typeof DeviceOrientationEvent !== "undefined" && 
+                typeof DeviceOrientationEvent.requestPermission === "function") {
+                try {
+                    const response = await DeviceOrientationEvent.requestPermission();
+                    if (response === "granted") {
+                        statusElement.textContent = "Status: Permission granted";
+                        startListening();
+                    } else {
+                        statusElement.textContent = "Status: Permission denied";
+                    }
+                } catch (error) {
+                    statusElement.textContent = `Status: Error - ${error.message}`;
+                }
             } else {
-                directionContainer.style.display = "none";
+                // For Android or non-iOS browsers
+                statusElement.textContent = "Status: Permission not required on this browser";
+                startListening();
             }
         }
 
-        function submitChoice() {
-            const action = document.getElementById("action").value;
-            const direction = document.getElementById("direction").value;
-            const result = document.getElementById("result");
+        // Function to start listening to device orientation
+        function startListening() {
+            window.addEventListener("deviceorientation", (event) => {
+                const alpha = event.alpha; // Rotation around Z axis (0-360 degrees)
+                const beta = event.beta;   // Rotation around X axis (-180 to 180 degrees)
+                const gamma = event.gamma; // Rotation around Y axis (-90 to 90 degrees)
 
-            if (action === "move" && direction) {
-                result.textContent = `Action: ${action}, Direction: ${direction}`;
-            } else if (action) {
-                result.textContent = `Action: ${action}`;
-            } else {
-                result.textContent = "Please select an action.";
-            }
+                orientationElement.textContent = `Orientation: Alpha (Z): ${alpha.toFixed(2)}°, Beta (X): ${beta.toFixed(2)}°, Gamma (Y): ${gamma.toFixed(2)}°`;
+            });
         }
+
+        // Attach event to the button
+        document.getElementById("request-permission").addEventListener("click", requestPermission);
     </script>
 </body>
 </html>
